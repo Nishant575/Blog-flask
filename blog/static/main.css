@@ -1,0 +1,44 @@
+body{
+    margin: 0px;
+    padding: 0px;
+    background-color: #EFF4F4;
+}
+
+nav a{
+
+    font-size: 1.1em;
+    color: #EEEFF5;
+}
+.nav-item:hover{
+    color: #FF5734; 
+}
+.navbar{
+
+    background: #263354;
+}
+
+.btn-outline-info{
+
+    color: #FF5734;
+    border-color: #FF5734; 
+}
+
+.btn-outline-info:hover{
+
+    background-color: #FF5734;
+    border-color: #FF5734;
+
+}
+
+.login-form{
+
+    margin-top: 70px;
+}
+
+.register-form{
+
+    margin-top: 50px;
+}
+
+
+
