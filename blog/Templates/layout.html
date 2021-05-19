@@ -12,7 +12,7 @@
     <title>MyBlogs</title>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg pt-4 pd-4">
+    <nav class="navbar navbar-expand-md pt-4 pd-4">
         <a class="navbar-brand" href="#">MyBlogs</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -24,14 +24,38 @@
           </div>
 
           <div class="navbar-nav">
-            <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
-            <a class="nav-item nav-link" href="{{ url_for('register') }}">Register</a>
+            {% if current_user.is_authenticated %}
+            <a class="nav-item dropdown nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              {{current_user.username}}
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item" href="#">Profile</a>
+              <a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a>
+            </div>
+            
+            {% else %}
+              <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
+              <a class="nav-item nav-link" href="{{ url_for('register') }}">Register</a>
+            {% endif %}  
           </div>
         </div>
       </nav>
-      <div class="container">
-        {%block content%}
-        {%endblock content%}
+      <div class="container main-content">
+        <div class="row">
+          <div class="col-md-8">
+            {% with messages = get_flashed_messages(with_categories=true)%}
+              {%if messages%}
+                {% for category, message in messages %}
+                  <div class="alert alert-{{category}}">
+                    {{message}}
+                  </div>
+                {% endfor %}  
+              {%endif%}
+            {%endwith%}
+            {%block content%}
+            {%endblock content%}
+          </div>
+        </div>
       </div>
       
 
