@@ -9,18 +9,21 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
 
-    <title>MyBlogs</title>
+    {% if title %}
+      <title>MyBlog-{{ title }}</title>
+    {% else %}
+      <title>MyBlog</title>
+    {% endif %}
   </head>
   <body>
     <nav class="navbar navbar-expand-md pt-4 pd-4">
-        <a class="navbar-brand" href="#">MyBlogs</a>
+        <a class="navbar-brand" href="{{ url_for('home') }}"><span id="logo-1">My</span>Blogs</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
           <div class="navbar-nav mr-auto">
-            <a class="nav-item nav-link" href="{{ url_for('home') }}">Home</a>
-            <a class="nav-item nav-link" href="">About</a>
+            <a class="nav-item nav-link" href="{{ url_for('home') }}">Home</a> 
           </div>
 
           <div class="navbar-nav">
@@ -29,10 +32,10 @@
               {{current_user.username}}
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <a class="dropdown-item" href="#">Profile</a>
+              <a class="dropdown-item" href="{{ url_for('profile') }}">Profile</a>
               <a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a>
             </div>
-            
+            <a class="nav-item nav-link" href="{{ url_for('new_post') }}">Create Blog</a>
             {% else %}
               <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
               <a class="nav-item nav-link" href="{{ url_for('register') }}">Register</a>
@@ -42,7 +45,7 @@
       </nav>
       <div class="container main-content">
         <div class="row">
-          <div class="col-md-8">
+          <div class="col-md-12">
             {% with messages = get_flashed_messages(with_categories=true)%}
               {%if messages%}
                 {% for category, message in messages %}

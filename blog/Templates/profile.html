@@ -1,0 +1,44 @@
+{%extends "layout.html"%}
+{%block content%}
+
+    <div class="content-section">
+      <div class="media">
+        <img class="rounded-circle account-img" src="{{ image_file }}">
+        <a href="{{ url_for('update') }}"><img src="https://img.icons8.com/material/24/000000/edit--v4.png"/></a>
+        <div class="media-body ml-3">
+          <h2 class="account-heading">{{ current_user.username }}</h2>
+          <p class="text-secondary">{{ current_user.email }}</p>
+          <p class="text-dark">{{current_user.bio}}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="container" id="user-posts">
+        <legend class="border-bottom mb-4">Your Posts</legend>
+        <div class="row mt-4">
+            {% if current_user.posts%}
+                {% for post in current_user.posts %}
+                    <div class="col-md-4 post-sec">
+                        <article class="media content-section">
+                            <div class="media-body">
+                                <figure>
+                                    <a href="#"><img class="img-fluid blog-img" src="{{ url_for('static', filename='resources/blog_pics/' + post.image_post) }}" alt="Some alt text"></a>
+                                </figure>  
+                                <div class="article-metadata">
+                                    <h2><a class="article-title" href="#">{{post.title}}</a></h2>
+                                </div>
+                                <a class="mr-2" href="#">{{post.author.username}}</a>
+                                <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+                            </div>
+                        </article>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12 text-justify-center">
+                    <a href="{{ url_for('new_post') }}">Add Blog</a>
+                </div>
+            {% endif %}    
+
+        </div>
+
+{%endblock content%}
