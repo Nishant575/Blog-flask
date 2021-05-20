@@ -1,6 +1,6 @@
 import secrets, os
 from PIL import Image
-from flask import render_template, url_for, flash, redirect, request
+from flask import render_template, url_for, flash, redirect, request, abort
 from blog.forms import RegistrationForm, LoginForm, UpdateProfileForm, PostForm
 from blog import app, db, bcrypt
 from blog.models import User, Post
@@ -9,7 +9,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 @app.route('/')
 @app.route("/home")
 def home():
-    posts = Post.query.all()
+    posts = Post.query.order_by(Post.date_posted.desc())
     return render_template('home.html',posts=posts)
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -64,7 +64,9 @@ def logout():
 @login_required
 def profile():
     image_file = url_for('static', filename='resources/profile_pics/' + current_user.image_file)
-    return render_template('profile.html',title='Profile',image_file=image_file)    
+    user = User.query.filter_by(username=current_user.username).first_or_404()
+    posts = Post.query.filter_by(author=current_user).order_by(Post.date_posted.desc())
+    return render_template('profile.html',title='Profile',image_file=image_file,posts=posts,user=user)    
 
 
 @app.route("/update", methods=['GET' , 'POST'])    
@@ -90,14 +92,14 @@ def save_picture_post(form_picture):
     _, f_ext = os.path.splitext(form_picture.filename)
     picture_fn = fname + f_ext
     picture_path = os.path.join(app.root_path, 'static/resources/blog_pics', picture_fn)
-    output_size = (298, 319)
+    output_size = (500, 500)
     i = Image.open(form_picture)
     i.thumbnail(output_size)
     i.save(picture_path)
 
     return picture_fn    
 
-@app.route("/post", methods=['GET', 'POST'])
+@app.route("/post/new", methods=['GET', 'POST'])
 @login_required
 def new_post(): 
     form = PostForm()   
@@ -111,4 +113,50 @@ def new_post():
         db.session.commit()
         flash('Blog created','success')
         return redirect(url_for('home'))
-    return render_template('post.html',title='New Post', form=form)
+    return render_template('post.html',title='New Post', form=form, legend='Create Post')
+
+@app.route("/post/<int:post_id>")
+def post(post_id):
+    post = Post.query.get_or_404(post_id)
+    return render_template('blog.html', title=post.title, post=post)
+
+@app.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
+@login_required
+def update_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    if post.author != current_user:
+        abort(403)
+    form = PostForm()
+    if form.validate_on_submit():
+        if form.picture.data:
+            picture_file = save_picture_post(form.picture.data)
+            post.image_post = picture_file
+        else:
+            post.image_post = 'default_post.jpg'    
+        post.title = form.title.data
+        post.content = form.content.data
+        db.session.commit()
+        flash('Your post has been updated!', 'success')
+        return redirect(url_for('post', post_id=post.id))
+    elif request.method == 'GET':
+        form.title.data = post.title
+        form.content.data = post.content
+    return render_template('post.html', title='Update Post',form=form, legend='Update Post')    
+
+@app.route("/post/<int:post_id>/delete")
+@login_required
+def delete_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    if post.author != current_user:
+        abort(403)
+    db.session.delete(post)
+    db.session.commit()
+    flash('Your post has been deleted!', 'success')
+    return redirect(url_for('profile'))    
+
+@app.route("/user/<string:username>")
+def user_profile(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    image_file = url_for('static', filename='resources/profile_pics/' + user.image_file)
+    posts = Post.query.filter_by(author=user).order_by(Post.date_posted.desc())
+    return render_template('profile.html', posts=posts, user=user,image_file=image_file)

@@ -16,7 +16,7 @@
     {% endif %}
   </head>
   <body>
-    <nav class="navbar navbar-expand-md pt-4 pd-4">
+    <nav class="navbar navbar-expand-md pt-4 pd-4 fixed-top">
         <a class="navbar-brand" href="{{ url_for('home') }}"><span id="logo-1">My</span>Blogs</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -28,14 +28,14 @@
 
           <div class="navbar-nav">
             {% if current_user.is_authenticated %}
-            <a class="nav-item dropdown nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <a class="nav-item nav-link" href="{{ url_for('new_post') }}">Create Blog</a>
+            <a class="nav-item dropdown nav-link dropdown-toggle" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
               {{current_user.username}}
             </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
               <a class="dropdown-item" href="{{ url_for('profile') }}">Profile</a>
               <a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a>
             </div>
-            <a class="nav-item nav-link" href="{{ url_for('new_post') }}">Create Blog</a>
             {% else %}
               <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
               <a class="nav-item nav-link" href="{{ url_for('register') }}">Register</a>
