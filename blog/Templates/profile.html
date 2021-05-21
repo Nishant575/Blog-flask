@@ -35,7 +35,6 @@
                                 {% if user == current_user %}
                                     <a class="float-right" href="{{ url_for('delete_post', post_id=post.id) }}"><img src="https://img.icons8.com/material-rounded/24/000000/delete-forever.png"/></a>
                                 {%endif%}    
-                                <a class="mr-2" href="{{ url_for('user_profile', username=post.author.username) }}">{{post.author.username}}</a>
                                 <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
                             </div>
                         </article>
