@@ -1,7 +1,16 @@
+html{
+
+  min-height: 100%;
+  position: relative;
+
+}
 body{
     margin: 0px;
     padding: 0px;
     background-color: #EFF4F4;
+    min-height: 100%;
+    display: grid;
+    margin-bottom: 60px;
 }
 
 .main-content{
@@ -81,7 +90,8 @@ nav a{
 
   .blog-title:hover{
 
-    color : #0F131D;
+    color : #FF5734;
+    text-decoration: none;
   }
 
   .dropdown-item:hover{
@@ -98,6 +108,25 @@ pre{
 
     white-space: pre-wrap;
 }
+footer{
 
+  background-color: #0b111f;
+  color: #f0f0f0;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  margin-top: auto;
+  height: 60px;
+}
 
+.foota{
+
+  color:#FDEDE9;
+}
+.foota:hover{
+
+  color: #FF5734;
+  text-decoration: none;
+}
 
