@@ -130,3 +130,15 @@ footer{
   text-decoration: none;
 }
 
+.btn-search{
+
+  color: #FF5734;
+  border-color: #FF5734
+}
+.btn-search:hover{
+
+  background-color: #FF5734;
+  border-color: #FF5734;
+
+}
+

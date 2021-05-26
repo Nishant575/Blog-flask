@@ -10,7 +10,15 @@ from flask_mail import Message
 @app.route('/')
 @app.route("/home")
 def home():
-    posts = Post.query.order_by(Post.date_posted.desc())
+    q = request.args.get('q')
+    if q:
+        user = User.query.filter(User.username.contains(q)).first()
+        if user:
+            posts = Post.query.filter_by(author=user).order_by(Post.date_posted.desc())
+        else:    
+            posts = Post.query.filter(Post.title.contains(q) | Post.content.contains(q))
+    else:    
+        posts = Post.query.order_by(Post.date_posted.desc())
     return render_template('home.html',posts=posts)
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -203,3 +211,4 @@ def reset_pass(token):
         flash('Password reset successful', 'success')
         return redirect(url_for('login'))
     return render_template('reset_password.html', title='Reset Password', form=form)    
+
