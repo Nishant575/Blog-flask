@@ -212,3 +212,12 @@ def reset_pass(token):
         return redirect(url_for('login'))
     return render_template('reset_password.html', title='Reset Password', form=form)    
 
+@app.route("/home/delete",methods=['POST'])
+@login_required
+def delete_user():
+    db.session.query(Post).filter_by(author=current_user).delete()
+    db.session.query(User).filter(User.id == current_user.id).delete()
+    db.session.commit()
+    return redirect(url_for('home'))  
+
+
